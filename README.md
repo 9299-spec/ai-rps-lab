@@ -20,3 +20,9 @@
 
 - TensorFlow.js：https://github.com/tensorflow/tfjs （Apache-2.0）
 - MobileNet 模型项目：https://github.com/tensorflow/tfjs-models/tree/master/mobilenet （Apache-2.0）
+
+## 手部关键点
+
+开启摄像头后，可显示每只手最多 21 个关节点及连线。点编号可开关。MediaPipe Hand Landmarker 在独立工作线程运行；此预训练模型用于可视化，孩子训练的分类器仍负责猜拳识别。模型和运行文件随网页加载，照片不上传。
+
+MediaPipe：https://github.com/google-ai-edge/mediapipe （Apache-2.0）。

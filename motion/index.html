@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="description" content="用身体控制的 AI 运动闯关：摘星星、开合护盾、穿越森林。摄像头实时显示身体关键点，在游戏中探索 AI 的视觉原理。"><title>能量小勇士 · AI 运动闯关</title><link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='20' fill='%23704cff'/%3E%3Ctext x='32' y='47' text-anchor='middle' font-size='46' fill='%23fff3b0'%3E✦%3C/text%3E%3C/svg%3E"><link rel="stylesheet" href="motion.css?v=1"><script type="module" src="app.mjs?v=1"></script></head>
+<body><header class="topbar"><a class="brand" href="./"><span class="brandmark">✦</span> AI 运动闯关 <small>能量小勇士</small></a><a class="back" href="../">↖ 回到猜拳实验室</a></header>
+<main>
+ <section class="intro"><div><p class="eyebrow">AI PLAYGROUND / 身体也是控制器</p><h1>站起来，<span>给世界充点电。</span></h1><p class="subtitle">伸伸手，打开双臂，再踏步出发。用你的动作点亮三个小世界。</p></div><div class="privacy"><i></i> 画面只在本机处理<br><small>不录像 · 不上传 · 不排名</small></div></section>
+ <ol class="route" aria-label="闯关路线"><li class="active" data-stage="0"><span class="route-icon">✦</span><div><small>01 / 星空</small><b>摘星星</b></div><em>等待出发</em></li><li data-stage="1"><span class="route-icon">◈</span><div><small>02 / 能量站</small><b>开合护盾</b></div><em>等待出发</em></li><li data-stage="2"><span class="route-icon">♧</span><div><small>03 / 森林</small><b>穿越森林</b></div><em>等待出发</em></li></ol>
+ <div class="play-layout">
+  <section class="camera-card" aria-label="身体识别窗口"><div class="camera-heading"><h2><span class="live-dot"></span>你的运动窗口</h2><span id="trackingLabel">等待开启摄像头</span></div>
+   <div class="view" id="view"><video id="video" autoplay muted playsinline></video><canvas id="skeleton" aria-label="身体关键点和连线"></canvas>
+    <div class="placeholder" id="placeholder"><div class="body-guide"><svg viewBox="0 0 150 230" aria-hidden="true"><circle cx="75" cy="30" r="17"/><path d="M75 54V133 M75 72L34 113 M75 72L116 113 M75 133L43 202 M75 133L107 202"/><g><circle cx="75" cy="72" r="6"/><circle cx="34" cy="113" r="6"/><circle cx="116" cy="113" r="6"/><circle cx="75" cy="133" r="6"/><circle cx="43" cy="202" r="6"/><circle cx="107" cy="202" r="6"/></g></svg></div><b>这里的主角，就是你</b><p>让头顶到脚踝都出现在画面里<br>摄像头放稳，周围留出活动空间</p></div>
+    <div class="view-hud"><span class="pill" id="stagePill">✦ 准备出发</span><span class="pill timer"><b id="timeLeft">30</b> 秒</span></div>
+    <div class="center-overlay" id="centerOverlay" hidden><strong id="bigText">3</strong><span id="bigCaption">准备出发</span></div>
+    <div class="reward" id="reward" aria-live="polite"></div><div class="view-bottom"><span id="viewHint">开启摄像头后，AI 会画出你的身体关键点</span></div>
+   </div>
+   <div class="camera-controls"><div><button id="cameraStart" class="secondary">开启摄像头</button><button id="cameraStop" class="text-button" disabled>关闭摄像头</button></div><label><input id="showPoints" type="checkbox" checked> 显示关键点</label></div>
+   <p class="status" id="status" role="status">请一次一人入镜。先把摄像头放稳，再退到能看见全身的位置。</p>
+  </section>
+  <aside class="mission-card"><div class="mission-top"><span class="eyebrow" id="missionTag">MISSION 01</span><span class="duration">每关 30 秒</span></div><div id="world" class="world stars"><span class="spark s1">✦</span><span class="spark s2">✧</span><span class="spark s3">✦</span><div class="planet"></div><div class="mascot"><span>•</span><span>•</span><i></i></div><div class="world-floor"></div><span class="world-caption" id="worldCaption">一伸手，星星就亮了</span></div>
+   <div class="mission-body"><h2 id="missionName">摘星星</h2><p class="action" id="action">左右手轮流向上伸</p><p class="detail" id="detail">一只手伸过头顶，再放下。换另一只手，摘下一颗星星。</p><div class="score"><div><strong id="count">0</strong><span id="unit">颗星星</span></div><span id="scoreNote">慢慢做，每一次都算数</span></div><div class="energy-track"><i id="energyFill"></i></div>
+    <button class="primary" id="start" disabled>先开启摄像头</button><div class="small-actions"><button class="text-button" id="pause" disabled>暂停一下</button><label><input type="checkbox" id="sound"> 奖励音效</label></div><p class="gentle">按自己的节奏活动，累了随时暂停。</p></div>
+  </aside>
+ </div>
+ <section class="learn"><div><p class="eyebrow">小小 AI 观察员</p><h2>它是怎么“看懂”动作的？</h2><p>试着挡住一只手，再让它回到画面。观察标记点和提示怎样变化。</p></div><ol><li><b>01 看画面</b><span>摄像头提供一张张图片。</span></li><li><b>02 找关键点</b><span>预训练模型估计身体的 33 个位置。</span></li><li><b>03 按规则判断</b><span>程序检查“抬起 → 放下”，才记一次。</span></li></ol><details><summary>给老师：这次用了哪种 AI？</summary><p>本游戏使用已经训练好的 MediaPipe Pose Landmarker 找身体关键点，孩子这次没有训练新模型。动作计数由程序根据关键点位置和连续变化判断。它可能因遮挡、光线或角度而漏数，不是专业体态评估。可以和猜拳实验对照：训练分类器、调用预训练模型、编写规则是三件不同的事。</p><p>每关 30 秒，中间至少休息 10 秒，之后由孩子手动继续。看不清身体时计时暂停；切换标签页会暂停游戏。结束或关闭摄像头后释放拍摄设备。此页不录制、保存或上传摄像头画面。</p><a href="https://ai.google.dev/edge/mediapipe/solutions/vision/pose_landmarker" target="_blank" rel="noreferrer">了解身体关键点模型 ↗</a></details></section>
+ <footer>今天的目标：让身体动起来，也让好奇心动起来。<span>AI 实验课堂 · 02</span></footer>
+</main>
+<dialog id="results"><div class="result-icon">✦</div><p class="eyebrow">ADVENTURE COMPLETE</p><h2>三个世界，被你点亮啦！</h2><p>不用和别人比，今天的每一次尝试都值得鼓励。</p><div id="resultCounts" class="result-counts"></div><p class="result-note">这是游戏记录的动作次数，可能有漏数。休息一下，想想 AI 在什么时候看得更清楚？</p><button id="again" class="primary">休息好了，再来一次</button><button id="closeResults" class="text-button">查看本次记录</button></dialog>
+</body></html>

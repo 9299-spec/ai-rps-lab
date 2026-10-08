@@ -26,3 +26,11 @@
 开启摄像头后，可显示每只手最多 21 个关节点及连线。点编号可开关。MediaPipe Hand Landmarker 在独立工作线程运行；此预训练模型用于可视化，孩子训练的分类器仍负责猜拳识别。模型和运行文件随网页加载，照片不上传。
 
 MediaPipe：https://github.com/google-ai-edge/mediapipe （Apache-2.0）。
+
+## AI 运动闯关
+
+访问 `motion/`：三关分别为交替伸手摘星、双臂侧平举开合、交替原地踏步。每关 30 秒，关间休息至少 10 秒后手动继续；完整动作才记次，看不清身体时暂停计时，切换标签页暂停。显示身体关键点和连线。完成后自动关闭摄像头，不录像、不保存或上传身体画面。
+
+使用随站点加载的 MediaPipe Tasks Vision 0.10.14 与 Pose Landmarker Lite（预训练模型，33 个关键点）；动作计数为带滞回及持续时间判断的规则程序，不是孩子训练的新模型，也不是专业体态评估。模型和软件来自 Google MediaPipe（Apache-2.0）：https://ai.google.dev/edge/mediapipe/solutions/vision/pose_landmarker 。
+
+建议电脑 Chrome / Edge，一次一人面向摄像头，让头和脚踝都在画面里。首次会加载约 6 MB 的身体模型及视觉运行库。
